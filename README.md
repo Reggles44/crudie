@@ -1,13 +1,20 @@
 # CRUD i.e.
-CRUD i.e. is a project for implementing a standard crud interface with as many languages and frameworks crosswed with as many data solutions as possible.
+CRUD i.e. is a project for implementing a standard crud interface with as many languages (except PHP) and frameworks crosswed with as many data solutions as possible.
 
-|                   | SQL | NoSQL | Redis | Elastic Search |
-|-------------------|:---:|:-----:|:-----:|---------------:|
-| Python Flask      |     |       |       |                |
-| Python Django     |     |       |       |                |
-| Python FastAPI    |     |       |       |                |
-| GO                |     |       |       |                |
-| Rust              |     |       |       |                |
+|                         | SQL | NoSQL | Redis | Elastic Search |
+|-------------------------|:---:|:-----:|:-----:|---------------:|
+| Python Flask            |     |       |       |                |
+| Python Django           |     |       |       |                |
+| Python FastAPI          |     |       |       |                |
+| GO                      |     |       |       |                |
+| Rust                    |     |       |       |                |
+| Ruby on Rails           |     |       |       |                |
+| Javascript Express.js   |     |       |       |                |
+| Javascript Next.js      |     |       |       |                |
+| Javascript NestJS       |     |       |       |                |
+| Javascript Meteor.js    |     |       |       |                |
+| C# ASP.NET Core         |     |       |       |                |
+| Java Spring             |     |       |       |                |
 
 ## Install
     git clone --recurse-submodules https://github.com/Reggles44/crudie.git
