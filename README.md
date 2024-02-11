@@ -29,13 +29,13 @@ The follow Create, Read, Update, and Delete examples are the standard that is im
 ## Create
 #### Request
 ```
-curl -X POST http://localhost:8000/<language><-framework>/<data_solution>/
+curl -X POST http://localhost:8000/<language><-framework>/<data_solution>/create
     -H "Content-Type: application/json"
     -d '{"foo":"abc","bar": 123}'
 ```
 
 ```
-POST /python-fastapi/redis/ HTTP/2
+POST /python-fastapi/redis/create HTTP/2
 Host: 127.0.0.1
 Content-Type: application/json
 
@@ -61,13 +61,13 @@ Content-Type: application/json
 ## Read
 #### Request
 ```
-curl http://localhost:8000/<language><-framework>/<data_solution>/
+curl http://localhost:8000/<language><-framework>/<data_solution>/read
     -H "Content-Type: application/x-www-form-urlencoded" 
     -d "foo=abc"
 ```
 
 ```
-GET /python-fastapi/redis/ HTTP/2
+GET /python-fastapi/redis/read HTTP/2
 Host: 127.0.0.1
 Content-Type: application/x-www-form-urlencoded
 
@@ -89,13 +89,13 @@ Content-Type: application/json
 ## Update
 #### Request
 ```
-curl -X PATCH http://localhost:8000/<language><-framework>/<data_solution>/
+curl -X PATCH http://localhost:8000/<language><-framework>/<data_solution>/update
     -H "Content-Type: application/json"
     -d '{"foo":"xyz"}'
 ```
 
 ```
-PATCH /python-fastapi/redis/ HTTP/2
+PATCH /python-fastapi/redis HTTP/2
 Host: 127.0.0.1
 Content-Type: application/json
 
