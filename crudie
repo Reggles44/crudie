@@ -1,2 +1,24 @@
 #!/bin/bash 
 
+RED = 0;31
+GREEN = 0;32
+
+HEADERS = -H 'Content-Type: application/json'
+OUTPUT = --write-out "%{response_code}"
+
+CREATE_DATA = -d '{"foo":"abc","bar":123}'
+READ_DATA = -d 'foo=abc'
+UPDATE_DATA = -d '{"foo":"abc","bar":789}'
+DELETE_DATA = -d 'foo=abc'
+
+function test_endpoint {
+    echo -n "$1"
+
+    local create = $(curl -X POST $1/create $HEADERS $CREATE_DATA)
+    local read = $(curl $1/read $READ_DATA)
+    local update = $(curl -X POST $1/update $HEADERS $UPDATE_DATA)
+    local delete = $(curl $1/delete $HEADERS $DELETE_DATA)
+
+    
+
+}

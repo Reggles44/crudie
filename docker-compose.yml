@@ -1,0 +1,11 @@
+version: '0.1'
+
+
+
+services:
+
+  python-django-sql:
+    extends:
+      file: python/django/sql/docker-compose.yml
+      service: app
+
