@@ -1,11 +1,18 @@
 version: '0.1'
 
-
-
 services:
+
+  python-flask-sql:
+    extends:
+      file: python/flask/sql/docker-compose.yml
+      service: app
 
   python-django-sql:
     extends:
       file: python/django/sql/docker-compose.yml
       service: app
 
+  python-fastapi-sql:
+    extends:
+      file: python/fastapi/sql/docker-compose.yml
+      service: app
