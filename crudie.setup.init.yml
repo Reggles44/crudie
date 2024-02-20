@@ -1,0 +1,15 @@
+version: '0.1'
+    
+services:
+
+  postgresdb:
+    image: postgres12
+    entrypoint: |
+      sh -c "psql -v ON_ERROR_STOP=0 --host postgresd --username ${POSTGRES_USER}" <<EOSQL
+        CREATE ROLE $${SERVICE_NAME} LOGIN SUPERUSER PASSWORD '$${SERVICE_DB_PASS}' ADMIN $${POSTGRES_USER};
+        CREATE DATABASE $${SERVICE_NAME} OWNER $${SERVICE_NAME};
+    enviorment:
+      - POSTGRES_USER=crudie
+      - SERVICE_NAME=crudie_postgres
+      - SERVICE_DB_PASS=crudie_postgres
+      

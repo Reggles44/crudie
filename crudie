@@ -1,5 +1,37 @@
-#!/bin/bash 
+#!/usr/bin/env bash
 
-docker-compose -f docker-compose-deps.yml -f docker-compose.yml up -d
-pipenv run python test.py
-docker-compose rm
+
+function print-help {
+    echo "help"
+}
+
+function main {
+
+    if [[ "$#" -eq 0 ]]; then
+        print-help
+        return
+    fi
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -h|-help|--help)
+                print-help
+                break
+            ;;
+            -s|-setup|--setup)
+                pipenv install
+                docker-compose -f crudie.setup.init.yml up -d
+                break
+            ;;
+            *)
+                docker-compose -f crudie.run.deps.yml up -d 
+                docker-compose -f crudie.run.test.yml up -d 
+                pipenv run python test.py 
+                break
+            ;;
+        esac
+    done
+
+}
+
+main $@

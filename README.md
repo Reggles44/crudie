@@ -3,10 +3,10 @@ CRUD i.e. is a project for implementing a standard crud interface with as many l
 
 |                         | SQL | NoSQL | Redis | Elastic Search |
 |-------------------------|:---:|:-----:|:-----:|---------------:|
-| Python Flask            |     |       |       |                |
-| Python Django           |     |       |       |                |
-| Python FastAPI          |     |       |       |                |
-| GO                      |     |       |       |                |
+| Python Flask            |  .  |       |       |                |
+| Python Django           |  .  |       |       |                |
+| Python FastAPI          |  .  |   .   |   .   |       .        |
+| GO                      |  .  |       |       |                |
 | Rust                    |     |       |       |                |
 | Ruby on Rails           |     |       |       |                |
 | Javascript Express.js   |     |       |       |                |

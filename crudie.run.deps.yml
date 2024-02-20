@@ -2,7 +2,7 @@ version: '0.1'
 
 services:
 
-  db:
+  postgresdb:
     image: postgres
     restart: always
     environment:

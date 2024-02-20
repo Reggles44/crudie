@@ -1,3 +1,6 @@
 [submodule "python/flask/sql"]
 	path = python/flask/sql
 	url = git@github.com:Reggles44/crudie-python-flask-sql.git
+[submodule "go/sql"]
+	path = go/sql
+	url = git@github.com:Reggles44/crudie-go-sql.git
