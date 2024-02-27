@@ -6,32 +6,32 @@ function print-help {
 }
 
 function main {
-
-    if [[ "$#" -eq 0 ]]; then
-        print-help
-        return
-    fi
-
-    while [ "$#" -gt 0 ]; do
-        case "$1" in
-            -h|-help|--help)
-                print-help
-                break
-            ;;
-            -s|-setup|--setup)
-                pipenv install
-                docker-compose -f crudie.setup.init.yml up -d
-                break
-            ;;
-            *)
-                docker-compose -f crudie.run.deps.yml up -d 
-                docker-compose -f crudie.run.test.yml up -d 
-                pipenv run python test.py 
-                break
-            ;;
-        esac
-    done
-
+    case "$1" in
+        -h|-help|--help)
+            print-help
+        ;;
+        -db)
+            docker-compose -f crudie.run.deps.yml exec -it postgresdb psql -U crudie 
+        ;;
+        -c|-clean|--clean)
+            docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
+        ;;
+        -s|-setup|--setup)
+            pipenv install
+            docker-compose -f crudie.run.deps.yml up -d
+            sleep 5
+            docker-compose -f crudie.setup.init.yml run --rm postgresdb
+            docker-compose -f crudie.run.deps.yml down
+        ;;
+        *)
+            echo "Testing"
+            docker-compose -f crudie.run.deps.yml up -d 
+            docker-compose -f crudie.run.test.yml up -d 
+            pipenv run python test.py 
+            docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
+        ;;
+    esac
 }
+
 
 main $@

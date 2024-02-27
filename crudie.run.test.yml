@@ -1,18 +1,25 @@
 version: '0.1'
 
+
 services:
 
   python-flask-sql:
+    environment:
+      - DATABASE_URL=postgres://crudie:crudie@postgresdb:5432/crudie
     extends:
       file: python/flask/sql/docker-compose.yml
       service: app
 
   python-django-sql:
+    environment:
+      - DATABASE_URL=postgres://crudie:crudie@postgresdb:5432/crudie
     extends:
       file: python/django/sql/docker-compose.yml
       service: app
 
   python-fastapi-sql:
+    environment:
+      - DATABASE_URL=postgres://crudie:crudie@postgresdb:5432/crudie
     extends:
       file: python/fastapi/sql/docker-compose.yml
       service: app

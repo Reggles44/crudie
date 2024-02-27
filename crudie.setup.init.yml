@@ -3,13 +3,19 @@ version: '0.1'
 services:
 
   postgresdb:
-    image: postgres12
+    image: postgres:16
     entrypoint: |
-      sh -c "psql -v ON_ERROR_STOP=0 --host postgresd --username ${POSTGRES_USER}" <<EOSQL
-        CREATE ROLE $${SERVICE_NAME} LOGIN SUPERUSER PASSWORD '$${SERVICE_DB_PASS}' ADMIN $${POSTGRES_USER};
+      sh -c "psql -v ON_ERROR_STOP=0 --host postgresdb --username \"${POSTGRES_USER:-crudie}\" <<EOSQL
+        CREATE ROLE $${SERVICE_NAME} LOGIN SUPERUSER PASSWORD '$${SERVICE_DB_PASS}' ADMIN $${POSTGRES_USER:-crudie};
         CREATE DATABASE $${SERVICE_NAME} OWNER $${SERVICE_NAME};
-    enviorment:
-      - POSTGRES_USER=crudie
+        DROP TABLE IF EXISTS $${TABLE_NAME}; 
+        CREATE TABLE IF NOT EXISTS $${TABLE_NAME} (id SERIAL PRIMARY KEY, service_key VARCHAR(200), data INTEGER); 
+        INSERT INTO $${TABLE_NAME}(service_key, data) VALUES ('init', 123); 
+        SELECT * FROM $${TABLE_NAME}; 
+      EOSQL"
+    environment:
+      - PGPASSWORD=crudie
       - SERVICE_NAME=crudie_postgres
       - SERVICE_DB_PASS=crudie_postgres
-      
+      - TABLE_NAME=crudie_data
+
