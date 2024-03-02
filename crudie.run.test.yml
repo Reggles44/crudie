@@ -14,23 +14,11 @@ services:
     ports:
       - "80:80"
 
-  # python-flask-sql:
-  #   environment:
-  #     - DATABASE_URL=postgres://crudie:crudie@postgresdb:5432/crudie
-  #   extends:
-  #     file: ./python/flask/sql/docker-compose.yml
-  #     service: app
-
-  # python-django-sql:
-  #   environment:
-  #     - DATABASE_URL=postgres://crudie:crudie@postgresdb:5432/crudie
-  #   extends:
-  #     file: python/django/sql/docker-compose.yml
-  #     service: app
-  #
   python-fastapi-sql:
+    build:
+      context: python/fastapi/sql
+      target: develop
+    ports:
+      - "8000"
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
-    extends:
-      file: python/fastapi/sql/docker-compose.yml
-      service: app

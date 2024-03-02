@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import git
 import pytest
@@ -6,23 +7,6 @@ import argparse
 import requests
 
 MODULE = sys.modules[__name__]
-path = os.path.dirname(os.path.realpath(__file__))
-repo = git.Repo(path)
-
-
-def path_list(p):
-    lst = []
-    while p:
-        parts = os.path.split(p)
-        if p in parts or "crudie" in parts:
-            break
-        lst.append(parts[1])
-        p = parts[0]
-    lst.reverse()
-    return lst
-
-submodule_paths = [path_list(sm.abspath) for sm in repo.submodules]
-
 CREATE_DATA = {"foo": "abc", "bar": 123}
 READ_DATA = {"foo": "abc"}
 UPDATE_DATA = {"foo": "abc", "bar": 789}
@@ -52,15 +36,23 @@ def delete(path):
     response.raise_for_status()
     assert response.json() == UPDATE_DATA
 
-def make_url(path):
-    return "http://" + "/".join(["localhost",*path])
 
-for path in submodule_paths:
+URL_REGEX = re.compile(r'^(http|https):\/\/([\w.-]+)(\.[\w.-]+)+([\/\w\.-]*)*\/?$')
+def url(arg):
+    if URL_REGEX.search(arg):
+        return arg
+    raise argparse.ArgumentTypeError
+
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument("urls", nargs='*', type=url)
+args = arg_parser.parse_args()
+
+for url in args.urls:
     @pytest.mark.parametrize("func", [create, read, update, delete])
     def run(func):
-        func(make_url(path))
+        func(url)
 
-    setattr(MODULE, f'test_{"_".join(path)}', run)
+    setattr(MODULE, f'test_{url}', run)
 
 
 def test_if_tests_exist():

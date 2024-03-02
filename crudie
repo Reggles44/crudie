@@ -13,6 +13,9 @@ function main {
         -db)
             docker-compose -f crudie.run.deps.yml exec -it postgresdb psql -U crudie 
         ;;
+        -n|-new|--new)
+            make "$@"
+        ;;
         -c|-clean|--clean)
             docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
         ;;
@@ -29,11 +32,21 @@ function main {
             docker-compose -f crudie.run.deps.yml up -d 
             docker-compose -f crudie.run.test.yml up -d 
             echo "PYTHON TIME"
-            pipenv run pytest test.py 
+            # pipenv run pytest test.py 
             # docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
         ;;
     esac
 }
 
 
-main $@
+function make {
+    [ ! -d "$1" ] && mkdir "$1"
+    pushd "$1" || return
+    [ ! -f Dockerfile ] && touch Dockerfile
+    [ ! -f docker-compose.yml ] && touch docker-compose.yml
+    popd || return
+    git add "$1".
+}
+
+
+main "$@"
