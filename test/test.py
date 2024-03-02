@@ -8,13 +8,20 @@ import requests
 MODULE = sys.modules[__name__]
 path = os.path.dirname(os.path.realpath(__file__))
 repo = git.Repo(path)
-submodule_paths = [os.path.split(sm.abspath) for sm in repo.submodules]
 
-arg_parser = argparse.ArgumentParser(
-    prog="CRUD.ie",
-    description="The testing script for CRUD.ie",
-)
-arg_parser.add_argument("paths", nargs="*", choices=submodule_paths)
+
+def path_list(p):
+    lst = []
+    while p:
+        parts = os.path.split(p)
+        if p in parts or "crudie" in parts:
+            break
+        lst.append(parts[1])
+        p = parts[0]
+    lst.reverse()
+    return lst
+
+submodule_paths = [path_list(sm.abspath) for sm in repo.submodules]
 
 CREATE_DATA = {"foo": "abc", "bar": 123}
 READ_DATA = {"foo": "abc"}
@@ -45,13 +52,13 @@ def delete(path):
     response.raise_for_status()
     assert response.json() == UPDATE_DATA
 
+def make_url(path):
+    return "http://" + "/".join(["localhost",*path])
 
-args = arg_parser.parse_args()
-for path in args.paths or submodule_paths:
-
+for path in submodule_paths:
     @pytest.mark.parametrize("func", [create, read, update, delete])
     def run(func):
-        func(path)
+        func(make_url(path))
 
     setattr(MODULE, f'test_{"_".join(path)}', run)
 

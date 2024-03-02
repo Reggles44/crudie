@@ -17,6 +17,8 @@ function main {
             docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
         ;;
         -s|-setup|--setup)
+            git submodule update --init --recursive --remote 
+            git submodule foreach git pull origin main
             pipenv install
             docker-compose -f crudie.run.deps.yml up -d
             sleep 5
@@ -24,11 +26,11 @@ function main {
             docker-compose -f crudie.run.deps.yml down
         ;;
         *)
-            echo "Testing"
             docker-compose -f crudie.run.deps.yml up -d 
             docker-compose -f crudie.run.test.yml up -d 
-            pipenv run python test.py 
-            docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
+            echo "PYTHON TIME"
+            pipenv run pytest test.py 
+            # docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
         ;;
     esac
 }
