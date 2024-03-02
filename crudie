@@ -43,7 +43,6 @@ function make {
     [ ! -d "$1" ] && mkdir "$1"
     pushd "$1" || return
     [ ! -f Dockerfile ] && touch Dockerfile
-    [ ! -f docker-compose.yml ] && touch docker-compose.yml
     popd || return
     git add "$1".
 }
