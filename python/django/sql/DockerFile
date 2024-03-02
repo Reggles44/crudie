@@ -1,0 +1,19 @@
+FROM python:3.11-slim as base
+
+WORKDIR /app
+COPY Pipefile Pipfile.lock /app/
+
+RUN pip install pipenv
+
+###
+
+FROM base as develop
+
+RUN pipenv install
+
+COPY manage.py ./
+COPY conf conf/
+COPY crudie crudie/
+
+EXPOSE 8000
+CMD ["gunicorn", "-c", "conf/gunicorn.conf.py", "crudie.wsgi"]

@@ -1,0 +1,11 @@
+version: '0.1'
+
+services:
+  app:
+    build:
+      context: .
+      target: develop
+    ports:
+      - "8000"
+    volumes:
+      - .:/app
