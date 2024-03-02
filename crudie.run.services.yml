@@ -1,0 +1,24 @@
+version: '0.1'
+
+
+services:
+  
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+    ports:
+      - "80:80"
+
+  python-fastapi-sql:
+    build:
+      context: python/fastapi/sql
+      target: develop
+    ports:
+      - "8000"
+    environment:
+      - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
