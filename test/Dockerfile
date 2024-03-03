@@ -12,7 +12,7 @@ FROM base as develop
 
 RUN pipenv install --dev --system --deploy 
 
-COPY test.py ./
+COPY test_services.py ./
 
 EXPOSE 8000
 CMD ["pytest"]

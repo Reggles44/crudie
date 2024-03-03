@@ -17,7 +17,8 @@ function main {
             make "$@"
         ;;
         -c|-clean|--clean)
-            docker-compose -f crudie.run.deps.yml -f crudie.run.test.yml down
+            docker-compose -f crudie.run.deps.yml run --rm postgresdb psql -U crudie -c "DELETE FROM crudie"
+            docker-compose -f crudie.run.deps.yml -f crudie.run.services.yml down
         ;;
         -s|-setup|--setup)
             docker-compose -f crudie.run.deps.yml up -d
@@ -27,9 +28,8 @@ function main {
         ;;
         *)
             docker-compose -f crudie.run.deps.yml up -d 
-            docker-compose -f crudie.run.services.yml up -d 
-            docker-compose -f crudie.run.test.yml run --rm test
-            docker-compose -f crudie.run.deps.yml -f crudie.run.services.yml down
+            docker-compose -f crudie.run.services.yml up -d
+            # docker-compose -f crudie.run.test.yml run --rm --build test
         ;;
     esac
 }
