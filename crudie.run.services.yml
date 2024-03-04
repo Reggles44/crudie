@@ -21,12 +21,12 @@ services:
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
 
-  # python-django-sql:
-  #   build:
-  #     context: python/django/sql
-  #     target: develop
-  #   ports:
-  #     - "8000"
-  #   environment:
-  #     - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
+  python-django-sql:
+    build:
+      context: python/django/sql
+      target: develop
+    ports:
+      - "8000"
+    environment:
+      - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
 

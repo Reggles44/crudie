@@ -1,6 +1,6 @@
 import os
 from typing import Optional
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from sqlmodel import create_engine, SQLModel, Session, Field, select
 
 app = FastAPI()
@@ -13,49 +13,48 @@ class Crudie(SQLModel, table=True):
     data: int
 
 
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-
 @app.on_event("startup")
 def on_startup():
     SQLModel.metadata.create_all(engine)
 
 
 @app.post("/create", response_model=Crudie)
-def create(data: Crudie, session: Session = Depends(get_session)):
-    session.add(data)
-    session.commit()
-    session.refresh(data)
-    return data
+def create(data: Crudie):
+    with Session(engine) as session:
+        session.add(data)
+        session.commit()
+        session.refresh(data)
+        return data
 
 
 @app.get("/read", response_model=Crudie)
-def read(service_key: str, session: Session = Depends(get_session)):
-    result = session.exec(
-        select(Crudie).where(Crudie.service_key == service_key)
-    ).first()
-    return result
+def read(service_key: str):
+    with Session(engine) as session:
+        result = session.exec(
+            select(Crudie).where(Crudie.service_key == service_key)
+        ).first()
+        return result
 
 
 @app.put("/update", response_model=Crudie)
-def update(data: Crudie, session: Session = Depends(get_session)):
-    result = session.exec(
-        select(Crudie).where(Crudie.service_key == data.service_key)
-    ).first()
-    result.data = data.data
-    session.add(result)
-    session.commit()
-    session.refresh(result)
-    return result
+def update(data: Crudie):
+    with Session(engine) as session:
+        result = session.exec(
+            select(Crudie).where(Crudie.service_key == data.service_key)
+        ).first()
+        result.data = data.data
+        session.add(result)
+        session.commit()
+        session.refresh(result)
+        return result
 
 
 @app.delete("/delete", response_model=Crudie)
-def delete(service_key: str, session: Session = Depends(get_session)):
-    result = session.exec(
-        select(Crudie).where(Crudie.service_key == service_key)
-    ).first()
-    session.delete(result)
-    session.commit()
-    return result
+def delete(service_key: str):
+    with Session(engine) as session:
+        result = session.exec(
+            select(Crudie).where(Crudie.service_key == service_key)
+        ).first()
+        session.delete(result)
+        session.commit()
+        return result

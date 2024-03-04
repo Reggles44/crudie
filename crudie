@@ -28,8 +28,8 @@ function main {
         ;;
         *)
             docker-compose -f crudie.run.deps.yml up -d 
-            docker-compose -f crudie.run.services.yml up -d
-            # docker-compose -f crudie.run.test.yml run --rm --build test
+            docker-compose -f crudie.run.services.yml up -d --build 
+            docker-compose -f crudie.run.test.yml run --rm --build test
         ;;
     esac
 }
