@@ -30,3 +30,12 @@ services:
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
 
+  go-sql:
+    build:
+      context: go/sql
+      target: develop
+    ports:
+      - "8000"
+    environment:
+      - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
+

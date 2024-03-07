@@ -64,6 +64,7 @@ DEFAULT_SERVICES = [
     "python-fastapi-sql",
     "python-flask-sql",
     "python-django-sql",
+    "go-sql",
 ]
 
 @pytest.mark.parametrize("service", DEFAULT_SERVICES)
