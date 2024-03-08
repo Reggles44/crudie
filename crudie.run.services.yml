@@ -38,4 +38,5 @@ services:
       - "8000"
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
+      - PORT=8000
 
