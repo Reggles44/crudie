@@ -69,6 +69,7 @@ DEFAULT_SERVICES = [
     "python-flask-sql",
     "python-django-sql",
     "go-sql",
+    "js-express-sql",
 ]
 
 @pytest.mark.parametrize("service", DEFAULT_SERVICES)

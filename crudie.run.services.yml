@@ -40,3 +40,12 @@ services:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
       - PORT=8000
 
+  js-express-sql:
+    build:
+      context: js/express/sql
+      target: develop
+    ports:
+      - "8000"
+    environment:
+      - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
+
