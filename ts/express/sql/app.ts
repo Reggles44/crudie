@@ -59,10 +59,10 @@ router.put("/update", async (req: Request, res: Response) => {
 
 
 router.delete("/delete", async (req: Request, res: Response) => {
-	const entry = await Crudie.findOne({ 
-		where: { 
-			service_key: req.query.service_key 
-		} 
+	const entry = await Crudie.findOne({
+		where: {
+			service_key: req.query.service_key
+		}
 	})
 	entry.destroy()
 	res.send(entry)
