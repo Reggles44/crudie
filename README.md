@@ -11,6 +11,7 @@ CRUD i.e. is a project for implementing a standard crud interface with as many l
 | TypeScript Express.js   |  .  |       |                |
 
 ## TODO LIST
+```
 Rust
 Zig
 Elixir Phoenix
@@ -18,9 +19,16 @@ Odin
 JS/TS Next.js
 JS/TS NestJS
 JS/TS Meteor.js
-Ruby on Rails
+Ocaml
+Haskell
+C++
+C
+COBOL
+Lisp (Hunchentoot)
 C# ASP.NET Core
 Java Springboot
+Excel
+```
 
 ## Install
     git clone --recurse-submodules https://github.com/Reggles44/crudie.git
