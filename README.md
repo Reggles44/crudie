@@ -7,12 +7,13 @@ CRUD i.e. is a project for implementing a standard crud interface with as many l
 | Python Django           |  .  |       |                |
 | Python FastAPI          |  .  |       |                |
 | GO                      |  .  |       |                |
+| Rust Actix-Web          |  .  |       |                |
 | JavaScript Express.js   |  .  |       |                |
 | TypeScript Express.js   |  .  |       |                |
+| Java Springboot         |  .  |       |                |
 
 ## TODO LIST
 ```
-Rust
 Zig
 Elixir Phoenix
 Odin
@@ -26,8 +27,6 @@ C
 COBOL
 Lisp (Hunchentoot)
 C# ASP.NET Core
-Java Springboot
-Excel
 ```
 
 ## Install

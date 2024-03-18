@@ -55,7 +55,7 @@ func readHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Printf("READ service_key=" + serviceKey)
-	
+
 	var data Crudie
 	readSql := `SELECT id, service_key, data FROM crudie WHERE service_key = $1`
 	err = dbPool.QueryRow(context.Background(), readSql, serviceKey).Scan(&data.ID, &data.ServiceKey, &data.Data)
@@ -104,7 +104,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Printf("DELETE service_key=" + serviceKey)
-	
+
 	var data Crudie
 	deleteSql := `DELETE FROM crudie WHERE service_key = $1 RETURNING id, service_key, data`
 	err = dbPool.QueryRow(context.Background(), deleteSql, serviceKey).Scan(&data.ID, &data.ServiceKey, &data.Data)
