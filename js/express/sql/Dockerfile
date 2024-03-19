@@ -10,4 +10,6 @@ COPY . .
 
 FROM base as develop
 
+EXPOSE 8000
+
 CMD ["node", "./app.js"]

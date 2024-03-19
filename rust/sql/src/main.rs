@@ -1,4 +1,4 @@
-use actix_web::{http::header::ContentType, web, App, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
 use sqlx::{Connection, PgConnection};
 
@@ -6,24 +6,24 @@ use sqlx::{Connection, PgConnection};
 struct Crudie {
     id: u8,
     service_key: String,
-    data: u8,
+    data: i64,
 }
 
 async fn create(data: web::Json<Crudie>, connection: web::Data<PgConnection>) -> web::Json<Crudie> {
-    let id = sqlx::query!(
+    let id: u8 = sqlx::query!(
         r#"
         INSERT INTO crudie (service_key, data) 
         VALUES ($1, $2) 
         RETURNING id
         "#,
         data.service_key,
-        data.data
+        data.data,
     )
     .execute(connection.get_ref())
     .await;
 
     return web::Json(Crudie {
-        id: id,
+        id,
         service_key: data.service_key,
         data: data.data,
     });
@@ -50,6 +50,7 @@ async fn main() -> Result<(), std::io::Error> {
 
     HttpServer::new(|| {
         App::new()
+            .wrap(Logger::default())
             .route("/create", web::post().to(create))
             .route("/read", web::post().to(read))
             .route("/update", web::post().to(update))

@@ -16,6 +16,6 @@ FROM base as develop
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /crudie
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD ["/crudie"]

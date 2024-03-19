@@ -11,7 +11,7 @@ services:
       - "8000"
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
-  
+
   python-flask-sql:
     build:
       context: python/flask/sql
@@ -30,6 +30,15 @@ services:
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
 
+  js-express-sql:
+    build:
+      context: js/express/sql
+      target: develop
+    ports:
+      - "8000"
+    environment:
+      - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
+
   go-sql:
     build:
       context: go/sql
@@ -40,12 +49,13 @@ services:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
       - PORT=8000
 
-  js-express-sql:
+  rust-sql:
     build:
-      context: js/express/sql
+      context: rust/sql
       target: develop
     ports:
       - "8000"
     environment:
       - DATABASE_URL=postgresql://crudie:crudie@postgresdb:5432/crudie
+
 
