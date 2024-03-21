@@ -29,6 +29,10 @@ Lisp (Hunchentoot)
 C# ASP.NET Core
 ```
 
+Rust: 
+    Rewrite querys to return results then parse that for fields
+
+
 ## Install
     git clone --recurse-submodules https://github.com/Reggles44/crudie.git
     
