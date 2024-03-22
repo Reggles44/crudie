@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n            DELETE FROM crudie\n            WHERE service_key = $1\n            RETURNING id\n            ",
+  "query": "\n        INSERT INTO crudie (service_key, data) \n        VALUES ($1, $2) \n        RETURNING id\n        ",
   "describe": {
     "columns": [
       {
@@ -11,12 +11,13 @@
     ],
     "parameters": {
       "Left": [
-        "Text"
+        "Varchar",
+        "Int4"
       ]
     },
     "nullable": [
       false
     ]
   },
-  "hash": "95ec9bca942ec3fa3c8757959d3c7b3833ae1bc7c48cef9a0006b54ce0d9fda4"
+  "hash": "b770133e02fc9aba79e5f68d820c87fe7ede966a93e9c9608a712ede95b95ff6"
 }

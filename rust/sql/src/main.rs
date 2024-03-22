@@ -15,24 +15,20 @@ async fn create(
     _req: HttpRequest,
     connection: web::Data<PgPool>,
 ) -> HttpResponse {
-    let id = Some(
-        sqlx::query!(
-            r#"
-            INSERT INTO crudie (service_key, data) 
-            VALUES ($1, $2) 
-            RETURNING id
-            "#,
-            data.service_key,
-            data.data,
-        )
-        .fetch_one(connection.get_ref())
-        .await
-        .expect("failed to insert into db")
-        .id,
-    );
-
+    let result = sqlx::query!(
+        r#"
+        INSERT INTO crudie (service_key, data) 
+        VALUES ($1, $2) 
+        RETURNING id
+        "#,
+        data.service_key,
+        data.data,
+    )
+    .fetch_one(connection.get_ref())
+    .await
+    .expect("failed to insert into db");
     HttpResponse::Ok().json(Crudie {
-        id,
+        id: Some(result.id),
         service_key: data.service_key.to_string(),
         data: data.data,
     })
@@ -68,25 +64,22 @@ async fn update(
     _req: HttpRequest,
     connection: web::Data<PgPool>,
 ) -> HttpResponse {
-    let id: Option<i32> = Some(
-        sqlx::query!(
-            r#"
-            UPDATE crudie
-            SET data = $1
-            WHERE service_key = $2
-            RETURNING id
-            "#,
-            data.data,
-            data.service_key
-        )
-        .fetch_one(connection.get_ref())
-        .await
-        .expect("failed to update record in db")
-        .id,
-    );
+    let result = sqlx::query!(
+        r#"
+        UPDATE crudie
+        SET data = $1
+        WHERE service_key = $2
+        RETURNING id
+        "#,
+        data.data,
+        data.service_key
+    )
+    .fetch_one(connection.get_ref())
+    .await
+    .expect("failed to update record in db");
 
     HttpResponse::Ok().json(Crudie {
-        id,
+        id: Some(result.id),
         service_key: data.service_key.to_string(),
         data: data.data,
     })
@@ -97,25 +90,22 @@ async fn delete(
     _req: HttpRequest,
     connection: web::Data<PgPool>,
 ) -> HttpResponse {
-    let id: Option<i32> = Some(
-        sqlx::query!(
-            r#"
-            DELETE FROM crudie
-            WHERE service_key = $1
-            RETURNING id
-            "#,
-            data.service_key,
-        )
-        .fetch_one(connection.get_ref())
-        .await
-        .expect("failed to delete record from db")
-        .id,
-    );
+    let result = sqlx::query!(
+        r#"
+        DELETE FROM crudie
+        WHERE service_key = $1
+        RETURNING id, data
+        "#,
+        data.service_key,
+    )
+    .fetch_one(connection.get_ref())
+    .await
+    .expect("failed to delete record from db");
 
     HttpResponse::Ok().json(Crudie {
-        id,
+        id: Some(result.id),
         service_key: data.service_key.to_string(),
-        data: data.data,
+        data: result.data,
     })
 }
 
