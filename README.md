@@ -10,11 +10,11 @@ CRUD i.e. is a project for implementing a standard crud interface with as many l
 | Rust Actix-Web          |  .  |       |                |
 | JavaScript Express.js   |  .  |       |                |
 | TypeScript Express.js   |  .  |       |                |
-| Java Springboot         |  .  |       |                |
+| Java Springboot         |     |       |                |
 
 ## TODO LIST
 ```
-Zig
+Zig (ZigZag)
 Elixir Phoenix
 Odin
 JS/TS Next.js
