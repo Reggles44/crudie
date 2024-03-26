@@ -10,37 +10,20 @@ function main {
         -h|-help|--help)
             print-help
         ;;
-        -db)
-            docker-compose -f crudie.run.deps.yml exec -it postgresdb psql -U crudie 
-        ;;
-        -n|-new|--new)
-            make "$@"
-        ;;
         -c|-clean|--clean)
-            docker-compose -f crudie.run.deps.yml run --rm postgresdb psql -U crudie -c "DELETE FROM crudie"
-            docker-compose -f crudie.run.deps.yml -f crudie.run.services.yml down
+            docker-compose -f postgres.yml run postgres-clean
+            docker-compose -f postgres.yml down --rmi
         ;;
         -s|-setup|--setup)
-            docker-compose -f crudie.run.deps.yml up -d
-            sleep 5
-            docker-compose -f crudie.setup.init.yml run --rm postgresdb
-            docker-compose -f crudie.run.deps.yml down
+            docker-compose -f postgres.yml up -d postgresdb
+            docker-compose -f postgres.yml run postgres-init
         ;;
         *)
-            docker-compose -f crudie.run.deps.yml up -d 
-            docker-compose -f crudie.run.services.yml up -d --build 
-            docker-compose -f crudie.run.test.yml run --rm --build test
+            docker-compose -f postgres.yml up -d postgresdb
+            docker-compose -f crudie.yml up -d
+            docker-compose -f test.yml run --rm --build test
         ;;
     esac
-}
-
-
-function make {
-    [ ! -d "$1" ] && mkdir "$1"
-    pushd "$1" || return
-    [ ! -f Dockerfile ] && touch Dockerfile
-    popd || return
-    git add "$1".
 }
 
 
