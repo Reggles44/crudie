@@ -1,11 +1,11 @@
 import pytest
-from tests import test, DEFAULT_SERVICES
+from tests import run_test, SERVICES
 
 
-@pytest.mark.parametrize("service", DEFAULT_SERVICES)
+@pytest.mark.parametrize("service", SERVICES)
 @pytest.mark.parametrize("method", ["GET", "POST", "PUT", "DELETE"])
-def invalid(service, method):
-    test(
+def test_invalid(service, method):
+    run_test(
         service=service,
         method=method,
         path="test",

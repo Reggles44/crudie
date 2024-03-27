@@ -4,7 +4,7 @@ import requests
 session = requests.Session()
 session.trust_env = False
 
-DEFAULT_SERVICES = [
+SERVICES = [
     "python-fastapi-sql",
     "python-flask-sql",
     "python-django-sql",
@@ -14,20 +14,20 @@ DEFAULT_SERVICES = [
 ]
 
 
-def test(
+def run_test(
     service: str,
     path: str,
     status_code: int,
     expected: typing.Optional[dict] = None,
-    id_expected: bool = True,
+    timeout=5,
     *args,
     **kwargs,
 ):
     url = f"http://crudie-{service}-1:8000/{path}"
-    response = session.request(url, *args, **kwargs)
+    response = session.request(url=url, *args, **kwargs, timeout=timeout)
     assert response.status_code == status_code
 
     if expected:
         actual = response.json()
-        assert id_expected and isinstance(actual.pop("id"), int)
+        assert isinstance(actual.pop("id"), int)
         assert actual == expected
