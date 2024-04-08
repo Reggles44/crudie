@@ -10,7 +10,7 @@ def test_create(service):
         method="POST",
         headers={"Content-Type": "application/json"},
         status_code=406,
-        json={"service_key": 123, "data": 1},
+        json={"service": service, "data": 1},
     )
 
 
@@ -22,7 +22,7 @@ def test_read(service):
         method="GET",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         status_code=406,
-        params={"service_key": "123"},
+        params={"service": service},
     )
 
 
@@ -34,7 +34,7 @@ def test_update(service):
         method="PUT",
         headers={"Content-Type": "application/json"},
         status_code=406,
-        json={"service_key": 123, "data": 2},
+        json={"service": service, "data": 2},
     )
 
 
@@ -42,10 +42,10 @@ def test_update(service):
 def test_delete(service):
     run_test(
         service=service,
-        path="update",
+        path="delete",
         method="DELETE",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         status_code=406,
-        params={"service_key": "123"},
+        params={"service": service},
     )
 

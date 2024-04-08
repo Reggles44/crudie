@@ -38,7 +38,7 @@ def test_update(service):
 def test_delete(service):
     run_test(
         service=service,
-        path="update",
+        path="delete",
         method="PUT",
         headers={"Content-Type": "application/json"},
         status_code=405,

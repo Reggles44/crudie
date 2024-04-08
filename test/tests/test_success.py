@@ -45,7 +45,7 @@ def test_update(service):
 def test_delete(service):
     run_test(
         service=service,
-        path="update",
+        path="delete",
         method="DELETE",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         status_code=200,

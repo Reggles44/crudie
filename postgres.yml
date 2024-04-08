@@ -1,6 +1,6 @@
 version: '0.1'
 
-s frvices:
+services:
 
   postgresdb:
     image: postgres:16

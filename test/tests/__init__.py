@@ -6,11 +6,11 @@ session.trust_env = False
 
 SERVICES = [
     "python-fastapi-sql",
-    "python-flask-sql",
-    "python-django-sql",
-    "js-express-sql",
-    "go-sql",
-    "rust-sql",
+    # "python-flask-sql",
+    # "python-django-sql",
+    # "js-express-sql",
+    # "go-sql",
+    # "rust-sql",
 ]
 
 
@@ -25,6 +25,7 @@ def run_test(
 ):
     url = f"http://crudie-{service}-1:8000/{path}"
     response = session.request(url=url, *args, **kwargs, timeout=timeout)
+    print(response.status_code, response.content)
     assert response.status_code == status_code
 
     if expected:

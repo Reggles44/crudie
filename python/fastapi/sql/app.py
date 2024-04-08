@@ -1,6 +1,8 @@
 import os
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from sqlmodel import create_engine, SQLModel, Session, Field, select
 
 app = FastAPI()
@@ -18,13 +20,23 @@ def on_startup():
     SQLModel.metadata.create_all(engine)
 
 
+
+@app.exception_handler(RequestValidationError)
+def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"defailt": exc.errors(), "body": exc.body},
+    )
+
+
 @app.post("/create", response_model=Crudie)
-def create(data: Crudie):
+def create(service_key: str, data: int):
+    crudie = Crudie(service_key=service_key, data=data)
     with Session(engine) as session:
-        session.add(data)
+        session.add(crudie)
         session.commit()
-        session.refresh(data)
-        return data
+        session.refresh(crudie)
+        return crudie
 
 
 @app.get("/read", response_model=Crudie)
@@ -37,12 +49,15 @@ def read(service_key: str):
 
 
 @app.put("/update", response_model=Crudie)
-def update(data: Crudie):
+def update(service_key: str, data: int):
+    crudie = Crudie(service_key=service_key, data=data)
     with Session(engine) as session:
         result = session.exec(
-            select(Crudie).where(Crudie.service_key == data.service_key)
+            select(Crudie).where(Crudie.service_key == crudie.service_key)
         ).first()
-        result.data = data.data
+        if not result:
+            raise
+        result.data = crudie.data
         session.add(result)
         session.commit()
         session.refresh(result)
