@@ -12,19 +12,23 @@ function main {
         ;;
         -c|-clean|--clean)
             docker-compose -f postgres.yml run postgres-clean
-            docker-compose -f postgres.yml down --rmi
+            docker-compose -f postgres.yml -f crudie.yml down --rmi all
         ;;
         -s|-setup|--setup)
             docker-compose -f postgres.yml up -d postgresdb
             docker-compose -f postgres.yml run postgres-init
         ;;
         *)
+            docker-compose -f postgres.yml run postgres-clean
+            docker-compose -f postgres.yml -f crudie.yml down --rmi all
+
             docker-compose -f postgres.yml up -d postgresdb
             docker-compose -f crudie.yml up -d
             docker-compose -f test.yml run --rm --build test
         ;;
     esac
 }
+
 
 
 main "$@"

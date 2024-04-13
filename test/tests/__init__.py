@@ -6,11 +6,11 @@ session.trust_env = False
 
 SERVICES = [
     "python-fastapi-sql",
-    # "python-flask-sql",
-    # "python-django-sql",
-    # "js-express-sql",
-    # "go-sql",
-    # "rust-sql",
+    "python-flask-sql",
+    "python-django-sql",
+    "js-express-sql",
+    "go-sql",
+    "rust-sql",
 ]
 
 

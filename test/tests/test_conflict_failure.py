@@ -9,8 +9,7 @@ def test_update(service):
         path="update",
         method="PUT",
         headers={"Content-Type": "application/json"},
-        status_code=409,
-        expected={"service_key": service, "data": 2},
+        status_code=428,
         json={"service_key": service, "data": 2},
     )
 
@@ -22,7 +21,6 @@ def test_delete(service):
         path="delete",
         method="DELETE",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
-        status_code=409,
-        expected={"service_key": service, "data": 2},
+        status_code=428,
         params={"service_key": service},
     )

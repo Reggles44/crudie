@@ -38,5 +38,5 @@ services:
       - PGPASSWORD=crudie
       - SERVICE_NAME=crudie_postgres
       - SERVICE_DB_PASS=crudie_postgres
-      - TABLE_NAME=crudie_data
+      - TABLE_NAME=crudie
 
