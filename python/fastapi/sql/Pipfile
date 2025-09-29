@@ -9,8 +9,9 @@ uvicorn = "*"
 sqlmodel = "*"
 typing-extensions = "*"
 psycopg2-binary = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.13"

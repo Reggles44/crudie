@@ -1,18 +1,11 @@
-FROM python:3.11-slim as base
+FROM python:3.13-slim AS base
 
 WORKDIR /app
 COPY Pipfile Pipfile.lock /app/
 
-RUN pip install pipenv
+RUN pip install -U pipenv 
 RUN pipenv install --system --deploy
-
-###
-
-FROM base as develop
-
-RUN pipenv install --dev --system --deploy
 
 COPY app.py .
 
-EXPOSE 8000
-CMD ["uvicorn", "--host", "0.0.0.0", "app:app"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8888", "app:app"]
