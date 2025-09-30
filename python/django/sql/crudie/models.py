@@ -1,9 +1,10 @@
 from django.db import models
 
 
-class Crudie(models.Model):
-    service_key = models.CharField(max_length=200)
-    data = models.IntegerField()
+class FooBar(models.Model):
+    id = models.AutoField(primary_key=True)
+    foo = models.CharField()
+    bar = models.IntegerField()
 
     class Meta:
-        db_table = "crudie"
+        db_table = "foobar"

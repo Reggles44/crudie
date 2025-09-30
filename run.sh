@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DATABASE_PORT=5432
-DATABASE_URL=postgresql://postgres:crudie@localhost:$DATABASE_PORT
+DATABASE_URL=postgresql://postgres:crudie@localhost:$DATABASE_PORT/postgres
 
 app::start() {
   app_dir=$1

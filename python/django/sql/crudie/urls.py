@@ -1,9 +1,10 @@
 from django.urls import path
-from crudie.views import create, read, update, delete
+from crudie.views import healthcheck, create, read, update, delete
 
 urlpatterns = [
-    path('create', create),
-    path('read', read),
-    path('update', update),
-    path('delete', delete),
+    path("", healthcheck),
+    path("create", create),
+    path("read/<int:id>", read),
+    path("update/<int:id>", update),
+    path("delete/<int:id>", delete),
 ]

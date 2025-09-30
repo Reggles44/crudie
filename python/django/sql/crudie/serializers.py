@@ -1,8 +1,8 @@
-from crudie.models import Crudie
+from crudie.models import FooBar
 from rest_framework import serializers
 
 
-class CrudieSerializer(serializers.ModelSerializer):
+class FooBarSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Crudie
-        fields = "__all__"
+        model = FooBar
+        fields = ["id", "foo", "bar"]
