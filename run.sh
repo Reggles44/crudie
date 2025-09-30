@@ -32,4 +32,4 @@ run() {
   done
 }
 
-run python/fastapi/sql
+run $1

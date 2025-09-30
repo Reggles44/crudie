@@ -1,14 +1,14 @@
 import os
-import json
-from dataclasses import dataclass, asdict
-from flask import Flask, Response, request, jsonify
+from dataclasses import dataclass
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase
 
 
 app = Flask(__name__)
 app.debug = True
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL") or ""
+
 
 class Base(DeclarativeBase):
     pass
@@ -19,46 +19,71 @@ db.init_app(app)
 
 
 @dataclass
-class Crudie(db.Model):
+class FooBar(db.Model):
+    __tablename__ = "foobar"
     id = db.Column(db.Integer, primary_key=True)
-    service_key = db.Column(db.String)
-    data = db.Column(db.Integer)
+    foo = db.Column(db.String)
+    bar = db.Column(db.Integer)
 
     def to_dict(self):
-        return {"id": self.id, "service_key": self.service_key, "data": self.data}
+        return {"id": self.id, "foo": self.foo, "bar": self.bar}
 
 
-@app.route("/create", methods=["POST", ])
+@app.route(
+    "/",
+    methods=[
+        "GET",
+    ],
+)
+def healthcheck():
+    return ""
+
+
+@app.route(
+    "/create",
+    methods=[
+        "POST",
+    ],
+)
 def create():
-    data = Crudie(**request.get_json())
-    db.session.add(data)
+    foobar = FooBar(**request.get_json())
+    db.session.add(foobar)
     db.session.commit()
-    return jsonify(data.to_dict())
-
-@app.route("/read", methods=["GET", ])
-def read():
-    service_key = request.args.to_dict().get("service_key")
-    data = Crudie.query.filter(Crudie.service_key == service_key).first()
-    return jsonify(data.to_dict())
+    return jsonify(foobar.to_dict())
 
 
-@app.route("/update", methods=["PUT", ])
-def update():
-    service_key = request.get_json().get("service_key")
-    data = Crudie.query.filter(Crudie.service_key == service_key).first()
-    data.data = request.get_json()["data"]
+@app.route(
+    "/read/<id>",
+    methods=[
+        "GET",
+    ],
+)
+def read(id):
+    foobar = FooBar.query.filter(FooBar.id == id).first()
+    return jsonify(foobar.to_dict())
+
+
+@app.route(
+    "/update/<id>",
+    methods=["PUT", "PATCH"],
+)
+def update(id):
+    foobar_update = request.get_json()
+    foobar = FooBar.query.filter(FooBar.id == id).first()
+    foobar.foo = foobar_update.get("foo") or foobar.foo
+    foobar.bar = foobar_update.get("bar") or foobar.bar
     db.session.commit()
-    return jsonify(data.to_dict())
+    return jsonify(foobar.to_dict())
 
 
-@app.route("/delete", methods=["DELETE", ])
-def delete():
-    service_key = request.args.to_dict().get("service_key")
-    data = Crudie.query.filter(Crudie.service_key == service_key).first()
-    db.session.delete(data)
+@app.route(
+    "/delete/<id>",
+    methods=[
+        "DELETE",
+    ],
+)
+def delete(id):
+    foobar = FooBar.query.filter(FooBar.id == id).first()
+    db.session.delete(foobar)
     db.session.commit()
-    return jsonify(data.to_dict())
-
-
-with app.app_context():
-    db.create_all()
+    return jsonify(foobar.to_dict())
