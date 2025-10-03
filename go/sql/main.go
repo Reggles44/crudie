@@ -1,143 +1,154 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
+	"gorm.io/driver/postgres"
 )
 
-var (
-	dbPool *pgxpool.Pool
-	err    error
-)
-
-type Crudie struct {
-	ID         uint   `json:"id"`
-	ServiceKey string `json:"service_key"`
-	Data       int    `json:"data"`
+type FooBar struct {
+	ID  uint   `json:"id" db:"id"`
+	Foo string `json:"foo" db:"foo" validate:"required"`
+	Bar int    `json:"bar" db:"bar" validate:"required"`
 }
 
-func createHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	var data Crudie
-	err := json.NewDecoder(r.Body).Decode(&data)
-	if err != nil {
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-
-	log.Printf("CREATE %+v", data)
-
-	insertSql := `INSERT INTO crudie (service_key, data) VALUES ($1, $2) RETURNING id`
-	err = dbPool.QueryRow(context.Background(), insertSql, data.ServiceKey, data.Data).Scan(&data.ID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(data)
-}
-
-func readHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	serviceKey := r.URL.Query().Get("service_key")
-	if serviceKey == "" {
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-	log.Printf("READ service_key=" + serviceKey)
-
-	var data Crudie
-	readSql := `SELECT id, service_key, data FROM crudie WHERE service_key = $1`
-	err = dbPool.QueryRow(context.Background(), readSql, serviceKey).Scan(&data.ID, &data.ServiceKey, &data.Data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(data)
-
-}
-
-func updateHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	var data Crudie
-	err := json.NewDecoder(r.Body).Decode(&data)
-	if err != nil {
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-
-	log.Printf("UPDATE %+v", data)
-
-	updateSql := `UPDATE crudie SET data = $2 WHERE service_key = $1 RETURNING id`
-	err = dbPool.QueryRow(context.Background(), updateSql, data.ServiceKey, data.Data).Scan(&data.ID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(data)
-
-}
-
-func deleteHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	serviceKey := r.URL.Query().Get("service_key")
-	if serviceKey == "" {
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-	log.Printf("DELETE service_key=" + serviceKey)
-
-	var data Crudie
-	deleteSql := `DELETE FROM crudie WHERE service_key = $1 RETURNING id, service_key, data`
-	err = dbPool.QueryRow(context.Background(), deleteSql, serviceKey).Scan(&data.ID, &data.ServiceKey, &data.Data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(data)
-
+func (foobar *FooBar) TableName() string {
+	return "foobar"
 }
 
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Panic("$PORT must be set")
+		port = "8888"
 	}
 
-	dbPool, err = pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("Missing DATABASE_URL")
+	}
+	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
-		log.Panic("failed to connect database")
+		log.Fatal("Database Connection failed", err)
 	}
-	if dbPool.Ping(context.Background()) != nil {
-		log.Panic("failed to connect database")
-	}
-	defer dbPool.Close()
 
-	http.HandleFunc("POST /create", createHandler)
-	http.HandleFunc("GET /read", readHandler)
-	http.HandleFunc("PUT /update", updateHandler)
-	http.HandleFunc("DELETE /delete", deleteHandler)
+	foobarValidator := validator.New(validator.WithRequiredStructEnabled())
+
+	http.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("--> %s %s", r.Method, r.URL.Path)
+		w.WriteHeader(http.StatusOK)
+	})
+
+	http.HandleFunc("POST /create", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("--> %s %s", r.Method, r.URL.Path)
+
+		var foobar FooBar
+		err := json.NewDecoder(r.Body).Decode(&foobar)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		err = foobarValidator.Struct(foobar)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		result := db.Create(&foobar)
+		if result.Error != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		responseData, err := json.Marshal(foobar)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.Write(responseData)
+		w.WriteHeader(http.StatusOK)
+	})
+
+	http.HandleFunc("GET /read/{id}", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("--> %s %s", r.Method, r.URL.Path)
+
+		id := r.PathValue("id")
+		var foobar FooBar
+		db.Find(&foobar, id)
+
+		responseData, err := json.Marshal(foobar)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.Write(responseData)
+		w.WriteHeader(http.StatusOK)
+	})
+
+	http.HandleFunc("PATCH /update/{id}", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("--> %s %s", r.Method, r.URL.Path)
+
+		id := r.PathValue("id")
+		var foobarUpdate FooBar
+
+		err := json.NewDecoder(r.Body).Decode(&foobarUpdate)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		err = foobarValidator.Struct(foobarUpdate)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		var foobar FooBar
+		db.Find(&foobar, id)
+
+		if foobarUpdate.Foo != "" {
+			foobar.Foo = foobarUpdate.Foo
+		}
+
+		if foobarUpdate.Bar != 0 {
+			foobar.Bar = foobarUpdate.Bar
+		}
+
+		responseData, err := json.Marshal(foobar)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.Write(responseData)
+		w.WriteHeader(http.StatusOK)
+	})
+
+	http.HandleFunc("DELETE /delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("--> %s %s", r.Method, r.URL.Path)
+
+		id := r.PathValue("id")
+		var foobar FooBar
+		db.Find(&foobar, id)
+		db.Delete(&foobar)
+
+		responseData, err := json.Marshal(foobar)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.Write(responseData)
+		w.WriteHeader(http.StatusOK)
+	})
 
 	// Start the server
 	log.Println(fmt.Sprintf("Starting Server on port %s", port))
