@@ -1,77 +1,68 @@
-import express, { Express, Request, Response } from "express";
-import { Sequelize, DataTypes } from 'sequelize';
+import express from 'express';
+import { Sequelize, Table, Model, Column, DataType } from 'sequelize-typescript';
 
-const app = express();
-const router = express.Router();
-const port = 8000;
+const port: number = 8888;
+const DB_URL: string = process.env.DATABASE_URL || '';
 
-app.use(express.json())
-app.use(express.urlencoded())
-
-const sequelize = new Sequelize(process.env.DATABASE_URL)
-
-const Crudie = sequelize.define("crudie", {
-	service_key: DataTypes.STRING,
-	data: DataTypes.INTEGER,
-}, {
-	tableName: "crudie",
-	createdAt: false,
-	updatedAt: false,
-})
+const app: express.Application = express();
+const sequelize = new Sequelize(DB_URL);
 
 
-router.use((err, req: Request, res: Response, next) => {
-	console.log(req.method + " " + req.path + " " + req.body);
-	console.log(err)
-	next(res);
-})
+@Table
+class FooBar extends Model {
+  @Column({ type: DataType.STRING, allowNull: false }) foo!: string
+  @Column({ type: DataType.NUMBER, allowNull: false }) bar!: number
+}
 
+app.get("/", async (_, resp) => {
+  resp.writeHead(200);
+});
 
-router.post("/create", async (req: Request, res: Response) => {
-	const entry = await Crudie.create({
-		service_key: req.body.service_key,
-		data: req.body.data
-	})
-	res.send(entry)
-})
+app.post("/create", async (req, resp) => {
+  try {
+    const foobar = await FooBar.create(req.body);
+    resp.status(200).json(foobar)
+  } catch (error) {
+    resp.status(500).json({ error: `failed to create foobar` })
+  }
+});
 
+app.get("/read/:id", async (req, resp) => {
+  try {
+    const foobar = await FooBar.findByPk(req.params.id);
+    resp.status(200).json(foobar)
+  } catch (error) {
+    resp.status(500).json({ error: `failed to read foobar` })
+  }
+});
 
-router.get("/read", async (req: Request, res: Response) => {
-	const entry = await Crudie.findOne({
-		where: {
-			service_key: req.query.service_key
-		}
-	})
-	res.send(entry)
-})
+app.put("/update/:id", async (req, resp) => {
+  try {
+    const foobar = await FooBar.findByPk(req.params.id);
+    await foobar?.update(req.body)
+    resp.status(200).json(foobar)
+  } catch (error) {
+    resp.status(500).json({ error: `failed to read foobar` })
+  }
+});
 
-
-router.put("/update", async (req: Request, res: Response) => {
-	const entry = await Crudie.update({
-		data: req.body.data
-	}, {
-		where: {
-			service_key: req.body.service_key
-		}, returning: true
-	})
-	res.send(entry[1])
-})
-
-
-router.delete("/delete", async (req: Request, res: Response) => {
-	const entry = await Crudie.findOne({
-		where: {
-			service_key: req.query.service_key
-		}
-	})
-	entry.destroy()
-	res.send(entry)
-})
-
-
-app.use('/', router);
+app.delete("/delete/:id", async (req, resp) => {
+  try {
+    const foobar = await FooBar.findByPk(req.params.id);
+    await foobar?.destroy(req.body)
+    resp.status(200).json(foobar)
+  } catch (error) {
+    resp.status(500).json({ error: `failed to read foobar` })
+  }
+});
 
 app.listen(port, async () => {
-	console.log("Listening on port " + port)
-})
-
+    try {
+        await sequelize.authenticate();
+        await sequelize.sync();
+        console.log('Database connection has been established successfully.');
+        console.log(`Server is running on port ${port}`);
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+});

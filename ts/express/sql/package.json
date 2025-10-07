@@ -3,5 +3,8 @@
     "express": "^4.18.3",
     "pg": "^8.11.3",
     "sequelize": "^6.37.1"
+  },
+  "scripts": {
+    "start": "nodemon app.ts"
   }
 }
