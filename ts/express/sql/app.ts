@@ -1,5 +1,5 @@
 import express from 'express';
-import { Sequelize, Table, Model, Column, DataType } from 'sequelize-typescript';
+import { Sequelize, Model, CreationOptional }  from 'sequelize';
 
 const port: number = 8888;
 const DB_URL: string = process.env.DATABASE_URL || '';
@@ -8,10 +8,10 @@ const app: express.Application = express();
 const sequelize = new Sequelize(DB_URL);
 
 
-@Table
 class FooBar extends Model {
-  @Column({ type: DataType.STRING, allowNull: false }) foo!: string
-  @Column({ type: DataType.NUMBER, allowNull: false }) bar!: number
+  declare id: CreationOptional<number>;
+  declare foo: string;
+  declare bar: number
 }
 
 app.get("/", async (_, resp) => {
