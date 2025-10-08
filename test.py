@@ -2,13 +2,15 @@ import json
 import requests
 import time
 
+
 time.sleep(1)
 
 healthy = False
 timeout = 5
 count = 0
 while not healthy:
-    health_check = requests.request(method="GET", url="http://localhost:8888")
+    health_check = requests.request(method="GET", url="http://localhost:8888", timeout=2)
+    print("healthcheck", health_check)
     healthy = health_check.ok
     count += 1
     if count >= timeout:
