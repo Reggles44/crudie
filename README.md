@@ -2,16 +2,16 @@
 
 CRUD i.e. is a project for implementing a standard crud interface with as many languages (except PHP) and frameworks crosswed with as many data solutions as possible.
 
-|                         | SQL | Redis | Elastic Search |
-|-------------------------|:---:|:-----:|---------------:|
-| Python Flask            |  .  |       |                |
-| Python Django           |  .  |       |                |
-| Python FastAPI          |  .  |       |                |
-| GO                      |  .  |       |                |
-| Rust Actix-Web          |  .  |       |                |
-| JavaScript Express.js   |  .  |       |                |
-| TypeScript Express.js   |  .  |       |                |
-| Java Springboot         |     |       |                |
+|                         | SQL |
+|-------------------------|:---:|
+| Python Flask            |  .  |
+| Python Django           |  .  |
+| Python FastAPI          |  .  |
+| GO                      |  .  |
+| Rust Actix-Web          |  .  |
+| JavaScript Express.js   |  .  |
+| TypeScript Express.js   |  .  |
+| Java Springboot         |     |
 
 <!--toc:start-->
 - [CRUD i.e](#crud-ie)
