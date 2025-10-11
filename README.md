@@ -16,14 +16,14 @@ CRUD i.e. is a project for implementing a standard crud interface with as many l
 
 |                         | SQL | Redis |
 |-------------------------|:---:|:-----:|
-|PythonFlask|Tested|Todo|
-|PythonDjango|Tested|Todo|
-|PythonFastAPI|Tested|Todo|
+|Python Flask|Tested|Todo|
+|Python Django|Tested|Todo|
+|Python FastAPI|Tested|Todo|
 |GO|Tested|Todo|
-|RustActix-Web|Tested|Todo|
-|JavaScriptExpress.js|Tested|Todo|
-|TypeScriptExpress.js|Tested|Todo|
-|JavaSpringboot|Todo|Todo|
+|Rust Actix-Web|Tested|Todo|
+|JavaScript Express.js|Tested|Todo|
+|TypeScript Express.js|Tested|Todo|
+|Java Springboot|Todo|Todo|
 |Zig (ZigZag)|Todo|Todo|
 |Elixir Phoenix|Todo|Todo|
 |Odin|Todo|Todo|
