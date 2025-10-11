@@ -2,43 +2,42 @@
 
 CRUD i.e. is a project for implementing a standard crud interface with as many languages (except PHP) and frameworks crosswed with as many data solutions as possible.
 
-|                         | SQL |
-|-------------------------|:---:|
-| Python Flask            |  .  |
-| Python Django           |  .  |
-| Python FastAPI          |  .  |
-| GO                      |  .  |
-| Rust Actix-Web          |  .  |
-| JavaScript Express.js   |  .  |
-| TypeScript Express.js   |  .  |
-| Java Springboot         |     |
-
 <!--toc:start-->
 - [CRUD i.e](#crud-ie)
-  - [TODO LIST](#todo-list)
+  - [Progress](#progress)
   - [CRUD Structure](#crud-structure)
     - [Create](#create)
     - [Read](#read)
     - [Update](#update)
     - [Delete](#delete)
 <!--toc:end-->
-## TODO LIST
 
-```text
-Zig (ZigZag)
-Elixir Phoenix
-Odin
-JS/TS Next.js
-JS/TS NestJS
-JS/TS Meteor.js
-Ocaml
-Haskell
-C++
-C
-COBOL
-Lisp (Hunchentoot)
-C# ASP.NET Core
-```
+## Progress
+
+|                         | SQL | Redis |
+|-------------------------|:---:|:-----:|
+|PythonFlask|Tested|Todo|
+|PythonDjango|Tested|Todo|
+|PythonFastAPI|Tested|Todo|
+|GO|Tested|Todo|
+|RustActix-Web|Tested|Todo|
+|JavaScriptExpress.js|Tested|Todo|
+|TypeScriptExpress.js|Tested|Todo|
+|JavaSpringboot|Todo|Todo|
+|Zig (ZigZag)|Todo|Todo|
+|Elixir Phoenix|Todo|Todo|
+|Odin|Todo|Todo|
+|JS/TS Next.js|Todo|Todo|
+|JS/TS NestJS|Todo|Todo|
+|JS/TS Meteor.js|Todo|Todo|
+|Ocaml|Todo|Todo|
+|Haskell|Todo|Todo|
+|C++|Todo|Todo|
+|C|Todo|Todo|
+|COBOL|Todo|Todo|
+|Lisp (Hunchentoot)|Todo|Todo|
+|C# ASP.NET Core|Todo|Todo|
+
 
 ## CRUD Structure
 
